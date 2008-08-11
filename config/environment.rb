@@ -68,4 +68,3 @@ Rails::Initializer.run do |config|
 end
 
 require 'lib/mailq.rb'
-ActionMailer::Base.delivery_method = :activemailer_queue

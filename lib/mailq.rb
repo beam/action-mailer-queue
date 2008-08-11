@@ -10,13 +10,10 @@ module ActionMailer
 
   class Queue < ActionMailer::Base
 
-    # Rozsireme Base a udelame accessor pro nastaveni typu dorucovani z fronty
-    # => enviroment.rb - ActionMailer::Queue.delivery_method_from_queue = :smtp
-    
-    @@delivery_method_from_queue = :smtp
-    cattr_accessor :delivery_method_from_queue
+    @@delivery_method = :activemailer_queue
+    cattr_accessor :delivery_method
   
-    class DontKnowHowToDeliveryEmail < StandardError; end  
+    class Mailer < ActionMailer::Base; end
   
     def self.queue
       return new.queue
@@ -56,15 +53,11 @@ module ActionMailer
       end
     
       def deliver!
-        Mailer.delivery_method = ActionMailer::Queue.delivery_method_from_queue
-        raise DontKnowHowToDeliveryEmail if Mailer.delivery_method == :activemailer_queue
         Mailer.deliver(self.to_tmail)
       end
     
     end
-  
-    class Mailer < ActionMailer::Base; end
-  
+    
   end
 
 end
