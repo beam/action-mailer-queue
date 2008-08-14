@@ -19,9 +19,9 @@ module ActionMailer
       end
     
       def tmail=(mail)
-        self.to = mail.to.uniq.join(",")
-        self.from = mail.from.uniq.join(",")
-        self.subject = mail.subject
+        self.to = mail.to.uniq.join(",") unless mail.to.blank?
+        self.from = mail.from.uniq.join(",") unless mail.from.blank?
+        self.subject = mail.subject unless mail.subject.blank?
         self.content = mail.encoded
       end
     
