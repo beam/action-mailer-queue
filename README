@@ -1,0 +1,49 @@
+ActionMailer::Queue
+===================
+
+Introduction goes here.
+
+Author
+======
+
+Andrew Beam
+KRAXNET s.r.o.
+
+Example
+=======
+
+class Notification < ActionMailer::Queue
+  
+  def test
+  end
+
+end
+
+
+New mail
+--------
+mail = Notification.deliver_test
+mail.class # => TMail::Mail
+mail.queue_id # => 1
+
+Notification.queue # => ActionMailer::Queue::Store => ActiveRecord::Base
+
+Deliver mail
+------------
+mail = Notification.queue.find(1)
+mail.class # => ActionMailer::Queue::Store
+mail.deliver! # => false || TMail::Mail
+
+if mail.deliver! == false 
+  mail.last_error # String (Error.to_s) 
+  mail.last_attempt_at # Datetime
+  mail.tries # => 1
+else 
+  mail.sent # => true
+  mail.message_id # String
+  mail.sent_at # Datetime
+end
+
+Process queue
+-------------
+Notification.queue.process! # { :limit => 100 }
