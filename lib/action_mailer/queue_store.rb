@@ -15,7 +15,7 @@ module ActionMailer
             :conditions => ["sent = ?", false],
             :order => "priority asc, last_attempt_at asc"
           }.merge(options)
-        self.find(:all, options) #.each { |q| q.deliver! }
+        self.find(:all, options).each { |q| q.deliver! }
       end
     
       def tmail=(mail)
