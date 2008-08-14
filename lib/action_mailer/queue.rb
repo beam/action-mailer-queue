@@ -9,7 +9,7 @@ module ActionMailer
     end
   
     def queue
-      return Store.create_by_table_name(self.class.to_s.downcase.pluralize)
+      return Store.create_by_table_name(self.class.to_s.tableize)
     end
   
     def perform_delivery_activemailer_queue(mail)
