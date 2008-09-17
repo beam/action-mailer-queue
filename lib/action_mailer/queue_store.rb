@@ -2,6 +2,17 @@ module ActionMailer
   class Queue < ActionMailer::Base
     class Store < ActiveRecord::Base
     
+      named_scope :for_send, :conditions => [ "sent = ?", false]
+      named_scope :already_sent, :conditions => [ "sent = ?", true]
+
+      named_scope :with_processing_rules, 
+        :conditions => [ "attempts < ? AND (last_attempt_at < ? OR last_attempt_at IS NULL)", ActionMailer::Queue.max_attempts_in_process, Time.now - ActionMailer::Queue.delay_between_attempts_in_process.minutes], 
+        :limit => ActionMailer::Queue.limit_for_processing,
+        :order => "priority asc, last_attempt_at asc"
+      
+      named_scope :with_error, :conditions => ["attempts > ?", 0]
+      named_scope :without_error, :conditions => ["attempts = ?", 0]
+    
       class MailAlreadySent < StandardError; end 
     
       def self.create_by_table_name(table_name)
@@ -10,12 +21,7 @@ module ActionMailer
       end
     
       def self.process!(options = {})
-        options = { 
-            :limit => 100,
-            :conditions => ["sent = ?", false],
-            :order => "priority asc, last_attempt_at asc"
-          }.merge(options)
-        self.find(:all, options).each { |q| q.deliver! }
+        self.for_send.with_processing_rules(:all, options).each { |q| q.deliver! }
       end
     
       def tmail=(mail)
@@ -49,7 +55,7 @@ module ActionMailer
         return mail
       rescue => err
         raise MailAlreadySent if err.class == ActionMailer::Queue::Store::MailAlreadySent 
-        self.tries += 1
+        self.attempts += 1
         self.last_error = err.to_s
         self.last_attempt_at = Time.now
         self.save
