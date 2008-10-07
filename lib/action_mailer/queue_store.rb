@@ -5,11 +5,11 @@ module ActionMailer
       named_scope :for_send, :conditions => [ "sent = ?", false]
       named_scope :already_sent, :conditions => [ "sent = ?", true]
 
-      named_scope :with_processing_rules, 
+      named_scope :with_processing_rules, lambda {{
         :conditions => [ "attempts < ? AND (last_attempt_at < ? OR last_attempt_at IS NULL)", ActionMailer::Queue.max_attempts_in_process, Time.now - ActionMailer::Queue.delay_between_attempts_in_process.minutes], 
         :limit => ActionMailer::Queue.limit_for_processing,
         :order => "priority asc, last_attempt_at asc"
-      
+      }}
       named_scope :with_error, :conditions => ["attempts > ?", 0]
       named_scope :without_error, :conditions => ["attempts = ?", 0]
     
