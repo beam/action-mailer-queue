@@ -4,7 +4,6 @@ class ActionMailerQueueGenerator < Rails::Generator::NamedBase
     record do |m|
       m.template 'model.rb', File.join('app/models', class_path, "#{file_name}.rb")
       m.directory File.join('app/views', class_path, "#{file_name}")
-      m.migration_template 'rename_tries_to_attempts_migration.rb', 'db/migrate', { :migration_file_name => "rename_tries_to_attempts_in_#{file_name}" }
       m.migration_template 'create_migration.rb', 'db/migrate', { :migration_file_name => "create_#{file_name}" } 
     end
   end
