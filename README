@@ -1,7 +1,7 @@
 ActionMailer::Queue
 ===================
 
-Introduction goes here.
+Store emails into ActiveRecord
 
 Author
 ======
