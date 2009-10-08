@@ -21,7 +21,7 @@ module ActionMailer
       end
     
       def self.process!(options = {})
-        self.for_send.with_processing_rules(:all, options).each { |q| q.deliver! }
+        self.for_send.with_processing_rules(:all, options.merge(:select => :id)).each { |q| self.find(q.id).deliver! }
       end
     
       def tmail=(mail)
@@ -54,7 +54,7 @@ module ActionMailer
         self.save
         return mail
       rescue => err
-        raise MailAlreadySent if err.class == ActionMailer::Queue::Store::MailAlreadySent 
+        raise err if err.class == ActionMailer::Queue::Store::MailAlreadySent
         self.attempts += 1
         self.last_error = err.to_s
         self.last_attempt_at = Time.now
