@@ -48,10 +48,14 @@ module ActionMailer
       def deliver!
         raise MailAlreadySent if self.sent == true
         mail = Mailer.deliver(self.to_tmail)
-        self.message_id = mail.message_id
-        self.sent = true
-        self.sent_at = Time.now
-        self.save
+        if ActionMailer::Queue.destroy_message_after_deliver
+          self.destroy
+        else
+          self.message_id = mail.message_id
+          self.sent = true
+          self.sent_at = Time.now
+          self.save
+        end
         return mail
       rescue => err
         raise err if err.class == ActionMailer::Queue::Store::MailAlreadySent

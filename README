@@ -61,6 +61,9 @@ ActionMailer::Queue.max_tries_in_process = 5
 ActionMailer::Queue.delay_between_attempt_in_process = 240 # [minutes]
 # - delay between attempt after previous attempt failed
 
+ActionMailer::Queue.destroy_message_after_deliver = false
+# - delete message from database after mail deliver
+
 Queue scopes
 ------------
 Notification.queue.for_send # emails for send
