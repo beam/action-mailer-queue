@@ -2,9 +2,9 @@ class Create<%= class_name %> < ActiveRecord::Migration
   def self.up
     create_table "<%= table_name %>" do |t|
       t.column :id,                       :integer
-      t.column :from,                     :string, :limit => 64, :default => nil
-      t.column :to,                       :string, :limit => 64, :default => nil
-      t.column :subject,                  :string, :limit => 64, :default => nil
+      t.column :from,                     :string, :limit => 255, :default => nil
+      t.column :to,                       :string, :limit => 255, :default => nil
+      t.column :subject,                  :string, :limit => 255, :default => nil
       t.column :content,                  :longblob
       t.column :message_id,               :string, :limit => 64
       t.column :sent,                     :boolean, :default => false, :null => false
