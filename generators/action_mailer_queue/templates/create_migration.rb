@@ -6,7 +6,7 @@ class Create<%= class_name %> < ActiveRecord::Migration
       t.column :to,                       :string, :limit => 255, :default => nil
       t.column :subject,                  :string, :limit => 255, :default => nil
       t.column :content,                  :longblob
-      t.column :message_id,               :string, :limit => 64
+      t.column :message_id,               :string, :limit => 255
       t.column :in_progress,              :boolean, :default => false, :null => false
       t.column :sent,                     :boolean, :default => false, :null => false
       t.column :attempts,                 :integer, :default => 0, :null => false
